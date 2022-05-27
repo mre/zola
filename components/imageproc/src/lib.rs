@@ -584,10 +584,10 @@ pub fn read_image_metadata<P: AsRef<Path>>(path: P) -> Result<ImageMetaResponse>
                 (_, _, Some(view_box)) => Ok((view_box.height, view_box.width)),
                 _ => Err("Invalid dimensions: SVG width/height and viewbox not set.".into()),
             }
-            .map(|(h, w)| ImageMetaResponse::new_svg(h as u32, w as u32))
+            .map(|(h, w)| ImageMetaResponse::new_svg(w as u32, h as u32))
         }
         "webp" => {
-            // Unfortunatelly we have to load the entire image here, unlike with the others :|
+            // Unfortunately we have to load the entire image here, unlike with the others :|
             let data = fs::read(path).map_err(|e| error(e.into()))?;
             let decoder = webp::Decoder::new(&data[..]);
             decoder.decode().map(ImageMetaResponse::from).ok_or_else(|| {
